@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: steam-playtime-aggregator
+
+steam:
+    hostname: http://fakeurl.com
+    apiKey: 123456789abcdefg

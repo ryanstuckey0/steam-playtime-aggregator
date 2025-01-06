@@ -1,3 +1,14 @@
+# Project specific
+application-local.yml
+target/*
+
+# IDE files
+.idea/*
+.vscode/*
+
+# OS Files
+.DS_Store
+
 # Compiled class file
 *.class
 
