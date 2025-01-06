@@ -1,0 +1,5 @@
+# steam-playtime-aggregator
+
+## Helpful Docs
+
+- [UserStats API](https://developer.valvesoftware.com/wiki/Steam_Web_API#GetUserStatsForGame_(v0002))- used to get user stats and playtime for games in scheduled job
