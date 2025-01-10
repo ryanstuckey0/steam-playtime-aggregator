@@ -8,5 +8,5 @@ import com.stucko09.steam_aggregator.model.GameRecord;
 
 public interface GamePlaytimeRecordRepository extends CrudRepository<GamePlaytimeRecord, Long> {
     public boolean existsByAppUser(AppUser appUser);
-    public boolean existsByGameRecord(GameRecord gameRecord);
+    public boolean existsByGameRecordAndAppUser(GameRecord gameRecord, AppUser appUser);
 }
