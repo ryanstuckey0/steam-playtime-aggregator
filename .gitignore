@@ -1,6 +1,6 @@
 # Project specific
 application.yml
-target/*
+target/**
 
 # IDE files
 .idea/*
