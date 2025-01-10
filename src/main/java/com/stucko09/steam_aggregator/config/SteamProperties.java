@@ -10,5 +10,4 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "steam")
 public class SteamProperties {
     private String hostname;
-    private String apiKey;
 }

@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.stucko09.steam_aggregator.config.SteamProperties;
 import com.stucko09.steam_aggregator.model.steam.SteamGetOwnedGamesResponse;
+import com.stucko09.steam_aggregator.model.steam.SteamGetRecentGamesResponse;
 import com.stucko09.steam_aggregator.model.steam.SteamResponse;
 
 import lombok.extern.apachecommons.CommonsLog;
@@ -18,6 +19,7 @@ import lombok.extern.apachecommons.CommonsLog;
 @Service
 public class SteamApiService {
     private static final String GET_OWNED_GAMES_REQUEST_PATH = "/IPlayerService/GetOwnedGames/v0001/?key=%s&steamid=%s&format=json&include_appinfo=1";
+    private static final String GET_RECENT_GAMES_REQUEST_PATH = "/IPlayerService/GetRecentlyPlayedGames/v0001/?key=%s&steamid=%s&format=json&include_appinfo=1";
 
     @Autowired
     private SteamProperties steamProperties;
@@ -25,15 +27,20 @@ public class SteamApiService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public SteamResponse<SteamGetOwnedGamesResponse> getOwnedGames(Long steamId) {        
+    public SteamResponse<SteamGetOwnedGamesResponse> getOwnedGames(Long steamId, String apiKey) {
+        return makeRequestToSteam(steamId, apiKey, GET_OWNED_GAMES_REQUEST_PATH, new ParameterizedTypeReference<SteamResponse<SteamGetOwnedGamesResponse>>() {});
+    }
+
+    public SteamResponse<SteamGetRecentGamesResponse> getRecentlyPlayedGames(Long steamId, String apiKey) {
+        return makeRequestToSteam(steamId, apiKey, GET_RECENT_GAMES_REQUEST_PATH, new ParameterizedTypeReference<SteamResponse<SteamGetRecentGamesResponse>>() {});
+    }
+
+    private <T> SteamResponse<T> makeRequestToSteam(Long steamId, String apiKey, String requestPath, ParameterizedTypeReference<SteamResponse<T>> responseType) {
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(steamProperties.getHostname()
-                        + String.format(GET_OWNED_GAMES_REQUEST_PATH, steamProperties.getApiKey(), steamId))
+                        + String.format(requestPath, apiKey, steamId))
                 .accept(MediaType.APPLICATION_JSON).build();
-        ResponseEntity<SteamResponse<SteamGetOwnedGamesResponse>> response = restTemplate.exchange(
-                requestEntity,
-                new ParameterizedTypeReference<SteamResponse<SteamGetOwnedGamesResponse>>() {
-                });
+        ResponseEntity<SteamResponse<T>> response = restTemplate.exchange(requestEntity, responseType);
 
         return response.getBody();
     }
