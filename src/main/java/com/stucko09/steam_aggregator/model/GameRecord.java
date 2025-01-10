@@ -5,18 +5,19 @@ import java.time.ZonedDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.github.dozermapper.core.Mapping;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
 @Data
 @Entity
-public class GamePlaytimeRecord {
+public class GameRecord {
     @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +31,8 @@ public class GamePlaytimeRecord {
     @UpdateTimestamp
     private ZonedDateTime updateTimestamp;
 
-    @OneToOne
-    private GameRecord gameRecord;
+    @Mapping("appid")
+    private Long steamAppId;
 
-    private int playtimeForever;
-    private int playtime2Weeks;
-    private int playtimeLinuxForever;
-    private int playtimeMacForever;
-    private int playtimeWindowsForever;
-    private int playtimeDeckForever;
+    private String name;
 }

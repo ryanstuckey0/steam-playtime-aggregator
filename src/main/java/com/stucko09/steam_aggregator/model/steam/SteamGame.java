@@ -1,15 +1,23 @@
 package com.stucko09.steam_aggregator.model.steam;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@AllArgsConstructor
-@Setter
-@Getter
+import lombok.Data;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Data
 public class SteamGame {
-    private String appId;
+    private Long appid;
     private String name;
-    private String playtime2Weeks;
-    private String playtimeForever;
+    private int playtimeForever;
+
+    @JsonProperty("playtime_2weeks")
+    private int playtime2Weeks;
+
+    private int playtimeWindowsForever;
+    private int playtimeMacForever;
+    private int playtimeLinuxForever;
+    private int playtimeDeckForever;
 }
