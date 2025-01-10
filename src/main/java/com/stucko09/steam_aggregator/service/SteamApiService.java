@@ -25,7 +25,7 @@ public class SteamApiService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public SteamResponse<SteamGetOwnedGamesResponse> getOwnedGames(Long steamId) {
+    public SteamResponse<SteamGetOwnedGamesResponse> getOwnedGames(Long steamId) {        
         RequestEntity<Void> requestEntity = RequestEntity
                 .get(steamProperties.getHostname()
                         + String.format(GET_OWNED_GAMES_REQUEST_PATH, steamProperties.getApiKey(), steamId))
