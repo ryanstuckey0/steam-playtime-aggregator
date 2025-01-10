@@ -11,8 +11,14 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public AppUser registerUser(Long steamId) {
-        return userRepository.save(new AppUser(steamId));
+    @Autowired
+    private StatsCollectionService statsCollectionService;
+
+    public AppUser registerUserAndSaveInitialPlaytime(Long steamId, String apiKey) {
+        AppUser user = registerUser(steamId);
+        user.setApiKey(apiKey);
+        statsCollectionService.collectAndSaveInitialPlaytimeStats(user);
+        return user;
     }
 
     public AppUser retrieveUserOrThrowException(Long steamId) {
@@ -24,5 +30,9 @@ public class UserService {
 
     public boolean userIsRegistered(Long steamId) {
         return userRepository.existsBySteamUserId(steamId);
+    }
+
+    private AppUser registerUser(Long steamId) {
+        return userRepository.save(new AppUser(steamId));
     }
 }

@@ -3,14 +3,10 @@ package com.stucko09.steam_aggregator.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.dozermapper.core.Mapper;
 import com.stucko09.steam_aggregator.model.AppUser;
-import com.stucko09.steam_aggregator.model.GamePlaytimeRecord;
-import com.stucko09.steam_aggregator.model.GameRecord;
 import com.stucko09.steam_aggregator.model.steam.SteamGame;
 import com.stucko09.steam_aggregator.model.steam.SteamGetOwnedGamesResponse;
-import com.stucko09.steam_aggregator.repository.GamePlaytimeRecordRepository;
-import com.stucko09.steam_aggregator.repository.GameRecordRepository;
+import com.stucko09.steam_aggregator.model.steam.SteamGetRecentGamesResponse;
 
 @Service
 public class StatsCollectionService {
@@ -19,30 +15,25 @@ public class StatsCollectionService {
     private SteamApiService steamApiService;
 
     @Autowired
-    private Mapper dozerBeanMapper;
+    private GameService gameService;
 
-    @Autowired
-    private GameRecordRepository gameRecordRepository;
-
-    @Autowired
-    private GamePlaytimeRecordRepository gamePlaytimeRecordRepository;
-
-    public void collectAndSaveDailyPlaytimeStats(Long steamId, AppUser user) {
-        SteamGetOwnedGamesResponse ownedGamesResponse = steamApiService.getOwnedGames(steamId).getResponse();
+    public void collectAndSaveInitialPlaytimeStats(AppUser user) {
+        SteamGetOwnedGamesResponse ownedGamesResponse = steamApiService
+                .getOwnedGames(user.getSteamUserId(), user.getApiKey())
+                .getResponse();
 
         for (SteamGame steamGame : ownedGamesResponse.getGames()) {
-            if (steamGame.getPlaytimeForever() == 0) continue;
+            gameService.saveInitialPlaytimeRecord(steamGame, user);
+        }
+    }
 
-            GameRecord gameRecord = gameRecordRepository.findBySteamAppId(steamGame.getAppid()).orElseGet(() -> {
-                GameRecord newGameRecord = dozerBeanMapper.map(steamGame, GameRecord.class);
-                return gameRecordRepository.save(newGameRecord);
-            });
+    public void collectAndSaveDailyPlaytimeStats(AppUser user) {
+        SteamGetRecentGamesResponse recentGamesResponse = steamApiService
+                .getRecentlyPlayedGames(user.getSteamUserId(), user.getApiKey())
+                .getResponse();
 
-            GamePlaytimeRecord gamePlaytimeRecord = dozerBeanMapper.map(steamGame, GamePlaytimeRecord.class);
-            gamePlaytimeRecord.setGameRecord(gameRecord);
-            gamePlaytimeRecord.setAppUser(user);
-
-            gamePlaytimeRecordRepository.save(gamePlaytimeRecord);
+        for (SteamGame steamGame : recentGamesResponse.getGames()) {
+            gameService.saveDailyPlaytimeRecord(steamGame, user);
         }
     }
 }

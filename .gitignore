@@ -1,5 +1,4 @@
 # Project specific
-application.yml
 target/**
 
 # IDE files

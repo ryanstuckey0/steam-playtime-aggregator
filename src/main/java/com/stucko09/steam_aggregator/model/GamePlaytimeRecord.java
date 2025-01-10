@@ -1,10 +1,6 @@
 package com.stucko09.steam_aggregator.model;
 
-import com.stucko09.steam_aggregator.util.Constants;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +25,6 @@ public class GamePlaytimeRecord extends BaseRecordClass {
     private int playtimeWindowsForever;
     private int playtimeDeckForever;
 
-    @Enumerated(EnumType.STRING)
-    private Constants.PlaytimeRecordType playtimeType;
+    private boolean isFirstGameEntry = false;
+    private boolean isFirstUserEntry = false;
 }
