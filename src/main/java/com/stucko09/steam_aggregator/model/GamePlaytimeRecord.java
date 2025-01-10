@@ -1,39 +1,25 @@
 package com.stucko09.steam_aggregator.model;
 
-import java.time.ZonedDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import com.stucko09.steam_aggregator.util.Constants;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Data
-public class GamePlaytimeRecord {
-    @Setter(AccessLevel.NONE)
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Getter
+@Setter
+@NoArgsConstructor
+public class GamePlaytimeRecord extends BaseRecordClass {
 
-    @Setter(AccessLevel.NONE)
-    @CreationTimestamp
-    private ZonedDateTime creationTimestamp;
-
-    @Setter(AccessLevel.NONE)
-    @UpdateTimestamp
-    private ZonedDateTime updateTimestamp;
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     private GameRecord gameRecord;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private AppUser appUser;
 
     private int playtimeForever;
@@ -42,4 +28,7 @@ public class GamePlaytimeRecord {
     private int playtimeMacForever;
     private int playtimeWindowsForever;
     private int playtimeDeckForever;
+
+    @Enumerated(EnumType.STRING)
+    private Constants.PlaytimeRecordType playtimeType;
 }
