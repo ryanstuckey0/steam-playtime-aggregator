@@ -5,18 +5,20 @@ import java.time.ZonedDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Data
-public class GamePlaytimeRecord {
+@NoArgsConstructor
+public class AppUser {
     @Setter(AccessLevel.NONE)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +32,10 @@ public class GamePlaytimeRecord {
     @UpdateTimestamp
     private ZonedDateTime updateTimestamp;
 
-    @ManyToOne
-    private GameRecord gameRecord;
+    @Column(unique = true)
+    private Long steamUserId;
 
-    @ManyToOne
-    private AppUser appUser;
-
-    private int playtimeForever;
-    private int playtime2Weeks;
-    private int playtimeLinuxForever;
-    private int playtimeMacForever;
-    private int playtimeWindowsForever;
-    private int playtimeDeckForever;
+    public AppUser(Long steamUserId) {
+        this.steamUserId = steamUserId;
+    }
 }
