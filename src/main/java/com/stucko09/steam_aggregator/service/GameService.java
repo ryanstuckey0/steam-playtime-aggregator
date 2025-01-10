@@ -54,7 +54,7 @@ public class GameService {
         if(isFirstUserEntry) {
             gamePlaytimeRecord.setFirstUserEntry(true);
             gamePlaytimeRecord.setFirstGameEntry(true);
-        } else if (!gamePlaytimeRecordRepository.existsByGameRecord(gameRecord)) {
+        } else if (!gamePlaytimeRecordRepository.existsByGameRecordAndAppUser(gameRecord, user)) {
             gamePlaytimeRecord.setFirstGameEntry(true);
         }
 
