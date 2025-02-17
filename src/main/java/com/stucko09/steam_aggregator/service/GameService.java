@@ -1,0 +1,63 @@
+package com.stucko09.steam_aggregator.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.dozermapper.core.Mapper;
+import com.stucko09.steam_aggregator.model.AppUser;
+import com.stucko09.steam_aggregator.model.GamePlaytimeRecord;
+import com.stucko09.steam_aggregator.model.GameRecord;
+import com.stucko09.steam_aggregator.model.steam.SteamGame;
+import com.stucko09.steam_aggregator.repository.GamePlaytimeRecordRepository;
+import com.stucko09.steam_aggregator.repository.GameRecordRepository;
+
+@Service
+public class GameService {
+    @Autowired
+    private GameRecordRepository gameRecordRepository;
+
+    @Autowired
+    private GamePlaytimeRecordRepository gamePlaytimeRecordRepository;
+
+    @Autowired
+    private Mapper dozerBeanMapper;
+
+    public GameRecord saveOrRetrieveGameRecord(SteamGame steamGame) {
+        return gameRecordRepository.findBySteamAppId(steamGame.getAppid()).orElseGet(() -> {
+            GameRecord newGameRecord = dozerBeanMapper.map(steamGame, GameRecord.class);
+            return gameRecordRepository.save(newGameRecord);
+        });
+    }
+
+    public GameRecord saveNewGameRecord(SteamGame steamGame) {
+        GameRecord newGameRecord = dozerBeanMapper.map(steamGame, GameRecord.class);
+        return gameRecordRepository.save(newGameRecord);
+    }
+
+    public GamePlaytimeRecord saveDailyPlaytimeRecord(SteamGame steamGame, AppUser user) {
+        return saveNewPlaytimeRecord(steamGame, user, false);
+    }
+
+    public GamePlaytimeRecord saveInitialPlaytimeRecord(SteamGame steamGame, AppUser user) {
+        return saveNewPlaytimeRecord(steamGame, user, true);
+    }
+
+    private GamePlaytimeRecord saveNewPlaytimeRecord(SteamGame steamGame, AppUser user, boolean isFirstUserEntry) {
+        GameRecord gameRecord = saveOrRetrieveGameRecord(steamGame);
+
+        GamePlaytimeRecord gamePlaytimeRecord = dozerBeanMapper.map(steamGame, GamePlaytimeRecord.class);
+        gamePlaytimeRecord.setGameRecord(gameRecord);
+        gamePlaytimeRecord.setAppUser(user);
+
+        // first entry flags default to false; only set them if it's the first user entry or game entry
+        // if it's first user entry, it's also logically the first game entry for that user
+        if(isFirstUserEntry) {
+            gamePlaytimeRecord.setFirstUserEntry(true);
+            gamePlaytimeRecord.setFirstGameEntry(true);
+        } else if (!gamePlaytimeRecordRepository.existsByGameRecordAndAppUser(gameRecord, user)) {
+            gamePlaytimeRecord.setFirstGameEntry(true);
+        }
+
+        return gamePlaytimeRecordRepository.save(gamePlaytimeRecord);
+    }
+}

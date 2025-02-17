@@ -1,3 +1,13 @@
+# Project specific
+target/**
+
+# IDE files
+.idea/*
+.vscode/*
+
+# OS Files
+.DS_Store
+
 # Compiled class file
 *.class
 
