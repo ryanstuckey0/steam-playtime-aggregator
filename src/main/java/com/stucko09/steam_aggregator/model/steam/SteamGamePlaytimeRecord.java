@@ -8,7 +8,7 @@ import lombok.Data;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
-public class SteamGame {
+public class SteamGamePlaytimeRecord {
     private Long appid;
     private String name;
     private int playtimeForever;
