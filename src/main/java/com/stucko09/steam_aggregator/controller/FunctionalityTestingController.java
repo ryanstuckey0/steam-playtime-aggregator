@@ -17,18 +17,10 @@ import com.stucko09.steam_aggregator.service.UserService;
 @RestController
 public class FunctionalityTestingController {
     @Autowired
-    private SteamApiService steamApiService;
-
-    @Autowired
     private UserStatsService statsCollectionService;
 
     @Autowired
     private UserService userService;
-
-    @GetMapping("/getOwnedGames/{steamId}")
-    public SteamResponse<SteamGetOwnedGamesResponse> getOwnedGames(@RequestHeader String apiKey, @PathVariable Long steamId) {
-        return steamApiService.getOwnedGames(steamId, apiKey);
-    }
 
     @GetMapping("/saveInitialPlaytime/{steamId}")
     public void saveInitialPlaytime(@RequestHeader String apiKey, @PathVariable Long steamId) {
