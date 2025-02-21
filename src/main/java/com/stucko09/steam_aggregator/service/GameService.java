@@ -7,7 +7,7 @@ import com.github.dozermapper.core.Mapper;
 import com.stucko09.steam_aggregator.model.AppUser;
 import com.stucko09.steam_aggregator.model.GamePlaytimeRecord;
 import com.stucko09.steam_aggregator.model.GameRecord;
-import com.stucko09.steam_aggregator.model.steam.SteamGame;
+import com.stucko09.steam_aggregator.model.steam.SteamGamePlaytimeRecord;
 import com.stucko09.steam_aggregator.repository.GamePlaytimeRecordRepository;
 import com.stucko09.steam_aggregator.repository.GameRecordRepository;
 
@@ -22,30 +22,28 @@ public class GameService {
     @Autowired
     private Mapper dozerBeanMapper;
 
-    public GameRecord saveOrRetrieveGameRecord(SteamGame steamGame) {
+    public GameRecord saveOrRetrieveGameRecord(SteamGamePlaytimeRecord steamGame) {
         return gameRecordRepository.findBySteamAppId(steamGame.getAppid()).orElseGet(() -> {
             GameRecord newGameRecord = dozerBeanMapper.map(steamGame, GameRecord.class);
             return gameRecordRepository.save(newGameRecord);
         });
     }
 
-    public GameRecord saveNewGameRecord(SteamGame steamGame) {
+    public GameRecord saveNewGameRecord(SteamGamePlaytimeRecord steamGame) {
         GameRecord newGameRecord = dozerBeanMapper.map(steamGame, GameRecord.class);
         return gameRecordRepository.save(newGameRecord);
     }
 
-    public GamePlaytimeRecord saveDailyPlaytimeRecord(SteamGame steamGame, AppUser user) {
-        return saveNewPlaytimeRecord(steamGame, user, false);
+    public GamePlaytimeRecord saveDailyPlaytimeRecord(SteamGamePlaytimeRecord playtimeRecord, GameRecord gameRecord, AppUser user) {
+        return saveNewPlaytimeRecord(playtimeRecord, gameRecord, user, false);
     }
 
-    public GamePlaytimeRecord saveInitialPlaytimeRecord(SteamGame steamGame, AppUser user) {
-        return saveNewPlaytimeRecord(steamGame, user, true);
+    public GamePlaytimeRecord saveInitialPlaytimeRecord(SteamGamePlaytimeRecord playtimeRecord, GameRecord gameRecord, AppUser user) {
+        return saveNewPlaytimeRecord(playtimeRecord, gameRecord, user, true);
     }
 
-    private GamePlaytimeRecord saveNewPlaytimeRecord(SteamGame steamGame, AppUser user, boolean isFirstUserEntry) {
-        GameRecord gameRecord = saveOrRetrieveGameRecord(steamGame);
-
-        GamePlaytimeRecord gamePlaytimeRecord = dozerBeanMapper.map(steamGame, GamePlaytimeRecord.class);
+    private GamePlaytimeRecord saveNewPlaytimeRecord(SteamGamePlaytimeRecord playtimeRecord, GameRecord gameRecord, AppUser user, boolean isFirstUserEntry) {
+        GamePlaytimeRecord gamePlaytimeRecord = dozerBeanMapper.map(playtimeRecord, GamePlaytimeRecord.class);
         gamePlaytimeRecord.setGameRecord(gameRecord);
         gamePlaytimeRecord.setAppUser(user);
 
