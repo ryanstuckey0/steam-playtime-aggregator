@@ -7,12 +7,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stucko09.steam_aggregator.model.AppUser;
-import com.stucko09.steam_aggregator.model.steam.SteamGetOwnedGamesResponse;
-import com.stucko09.steam_aggregator.model.steam.SteamResponse;
-import com.stucko09.steam_aggregator.service.UserStatsService;
-import com.stucko09.steam_aggregator.service.SteamApiService;
 import com.stucko09.steam_aggregator.service.UserService;
-
+import com.stucko09.steam_aggregator.service.UserStatsService;
 
 @RestController
 public class FunctionalityTestingController {
