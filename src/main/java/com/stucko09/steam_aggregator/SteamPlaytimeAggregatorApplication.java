@@ -8,5 +8,4 @@ public class SteamPlaytimeAggregatorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SteamPlaytimeAggregatorApplication.class, args);
 	}
-
 }

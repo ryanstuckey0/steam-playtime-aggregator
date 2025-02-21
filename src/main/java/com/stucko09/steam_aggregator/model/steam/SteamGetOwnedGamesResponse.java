@@ -11,5 +11,5 @@ import lombok.Data;
 @Data
 public class SteamGetOwnedGamesResponse {
     private String gameCount;
-    private List<SteamGame> games;
+    private List<SteamGamePlaytimeRecord> games;
 }

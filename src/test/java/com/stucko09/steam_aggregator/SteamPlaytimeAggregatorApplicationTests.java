@@ -11,5 +11,4 @@ class SteamPlaytimeAggregatorApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
